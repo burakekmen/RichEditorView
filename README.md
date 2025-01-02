@@ -9,7 +9,12 @@ RichEditorView is a simple, modular, drop-in UIView subclass for Rich Text Editi
 Improvement was made (2025)
 --------------
 - Font option was added
+![Font Change Actions](./art/fontChange.png)
+![Font Change Demo](./art/fontChangeSample.gif)
+  
 - The icon of the applied change was made to appear in a different color
+![Icon Applied Color Action](./art/iconAppliedColor.png)
+![Font Change Demo](./art/textAppliedColorSample.gif)
 
 If you want to use the new features, you can download the code from the "Release" section and import it into your project.
 
