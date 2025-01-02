@@ -604,7 +604,6 @@ private let DefaultInnerLineHeight: Int = 21
     }
     
     // MARK: - Responder Handling
-    
     override open func becomeFirstResponder() -> Bool {
         if !webView.isFirstResponder {
             focus()

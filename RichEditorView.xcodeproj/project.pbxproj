@@ -12,10 +12,10 @@
 		281EBA392D266F0700F1451E /* rich_editor_tests.js in Resources */ = {isa = PBXBuildFile; fileRef = 281EBA362D266F0700F1451E /* rich_editor_tests.js */; };
 		281EBA3C2D26701400F1451E /* fonts@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 281EBA3A2D26701400F1451E /* fonts@3x.png */; };
 		281EBA3D2D26701400F1451E /* fonts@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 281EBA3B2D26701400F1451E /* fonts@2x.png */; };
-		282E064E2D2669D400E3FA52 /* RichEditorWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 282E064D2D2669D400E3FA52 /* RichEditorWebView.swift */; };
-		282E06512D266A4B00E3FA52 /* String+Props.swift in Sources */ = {isa = PBXBuildFile; fileRef = 282E06502D266A4B00E3FA52 /* String+Props.swift */; };
-		282E06532D266ABF00E3FA52 /* UIColor+Extenstions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 282E06522D266ABF00E3FA52 /* UIColor+Extenstions.swift */; };
-		282E06552D266AFD00E3FA52 /* Collection+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 282E06542D266AFD00E3FA52 /* Collection+Extentions.swift */; };
+		281EBA612D26738D00F1451E /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 281EBA5C2D26738D00F1451E /* UIColor+Extensions.swift */; };
+		281EBA632D26738D00F1451E /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 281EBA5E2D26738D00F1451E /* String+Extensions.swift */; };
+		281EBA662D26747C00F1451E /* Collection+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 281EBA652D26747C00F1451E /* Collection+Extensions.swift */; };
+		281EBA682D26748600F1451E /* RichEditorWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 281EBA672D26748600F1451E /* RichEditorWebView.swift */; };
 		282E067B2D266CB200E3FA52 /* redo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 282E06562D266CB100E3FA52 /* redo@2x.png */; };
 		282E067C2D266CB200E3FA52 /* h1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 282E06572D266CB100E3FA52 /* h1@2x.png */; };
 		282E067D2D266CB200E3FA52 /* italic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 282E06582D266CB100E3FA52 /* italic@2x.png */; };
@@ -80,10 +80,10 @@
 		281EBA362D266F0700F1451E /* rich_editor_tests.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = rich_editor_tests.js; sourceTree = "<group>"; };
 		281EBA3A2D26701400F1451E /* fonts@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fonts@3x.png"; sourceTree = "<group>"; };
 		281EBA3B2D26701400F1451E /* fonts@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fonts@2x.png"; sourceTree = "<group>"; };
-		282E064D2D2669D400E3FA52 /* RichEditorWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RichEditorWebView.swift; sourceTree = "<group>"; };
-		282E06502D266A4B00E3FA52 /* String+Props.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Props.swift"; sourceTree = "<group>"; };
-		282E06522D266ABF00E3FA52 /* UIColor+Extenstions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extenstions.swift"; sourceTree = "<group>"; };
-		282E06542D266AFD00E3FA52 /* Collection+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Extentions.swift"; sourceTree = "<group>"; };
+		281EBA5C2D26738D00F1451E /* UIColor+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIColor+Extensions.swift"; path = "Classes/UIColor+Extensions.swift"; sourceTree = "<group>"; };
+		281EBA5E2D26738D00F1451E /* String+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+Extensions.swift"; path = "Classes/String+Extensions.swift"; sourceTree = "<group>"; };
+		281EBA652D26747C00F1451E /* Collection+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Collection+Extensions.swift"; path = "Classes/Collection+Extensions.swift"; sourceTree = "<group>"; };
+		281EBA672D26748600F1451E /* RichEditorWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RichEditorWebView.swift; path = Classes/RichEditorWebView.swift; sourceTree = "<group>"; };
 		282E06562D266CB100E3FA52 /* redo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "redo@2x.png"; sourceTree = "<group>"; };
 		282E06572D266CB100E3FA52 /* h1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "h1@2x.png"; sourceTree = "<group>"; };
 		282E06582D266CB100E3FA52 /* italic@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "italic@2x.png"; sourceTree = "<group>"; };
@@ -156,16 +156,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		282E064F2D266A3B00E3FA52 /* Extentions */ = {
-			isa = PBXGroup;
-			children = (
-				282E06502D266A4B00E3FA52 /* String+Props.swift */,
-				282E06522D266ABF00E3FA52 /* UIColor+Extenstions.swift */,
-				282E06542D266AFD00E3FA52 /* Collection+Extentions.swift */,
-			);
-			name = Extentions;
-			sourceTree = "<group>";
-		};
 		FBA6AAEF1AD3EC9F00721644 = {
 			isa = PBXGroup;
 			children = (
@@ -225,11 +215,13 @@
 		FBA6AB151AD3ED1700721644 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				282E064F2D266A3B00E3FA52 /* Extentions */,
+				281EBA672D26748600F1451E /* RichEditorWebView.swift */,
+				281EBA652D26747C00F1451E /* Collection+Extensions.swift */,
+				281EBA5E2D26738D00F1451E /* String+Extensions.swift */,
+				281EBA5C2D26738D00F1451E /* UIColor+Extensions.swift */,
 				FBA6AB851AD3ED3C00721644 /* RichEditorOptionItem.swift */,
 				FBA6AB861AD3ED3C00721644 /* RichEditorToolbar.swift */,
 				FBA6AB871AD3ED3C00721644 /* RichEditorView.swift */,
-				282E064D2D2669D400E3FA52 /* RichEditorWebView.swift */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -460,12 +452,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				282E064E2D2669D400E3FA52 /* RichEditorWebView.swift in Sources */,
-				282E06512D266A4B00E3FA52 /* String+Props.swift in Sources */,
+				281EBA662D26747C00F1451E /* Collection+Extensions.swift in Sources */,
 				FBA6AB8A1AD3ED3C00721644 /* RichEditorOptionItem.swift in Sources */,
-				282E06552D266AFD00E3FA52 /* Collection+Extentions.swift in Sources */,
+				281EBA632D26738D00F1451E /* String+Extensions.swift in Sources */,
+				281EBA682D26748600F1451E /* RichEditorWebView.swift in Sources */,
 				FBA6AB8B1AD3ED3C00721644 /* RichEditorToolbar.swift in Sources */,
-				282E06532D266ABF00E3FA52 /* UIColor+Extenstions.swift in Sources */,
+				281EBA612D26738D00F1451E /* UIColor+Extensions.swift in Sources */,
 				FBA6AB8C1AD3ED3C00721644 /* RichEditorView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

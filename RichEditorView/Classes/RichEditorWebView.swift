@@ -2,7 +2,7 @@
 //  RichEditorWebView.swift
 //  RichEditorView
 //
-//  Created by C. Bess on 9/18/19.
+//  Created by Burak Ekmen on 2.01.2025.
 //
 
 import WebKit
