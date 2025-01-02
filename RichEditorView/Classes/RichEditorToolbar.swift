@@ -9,7 +9,7 @@ import UIKit
 
 /// RichEditorToolbarDelegate is a protocol for the RichEditorToolbar.
 /// Used to receive actions that need extra work to perform (eg. display some UI)
-@objc public protocol RichEditorToolbarDelegate: class {
+@objc public protocol RichEditorToolbarDelegate: AnyObject {
 
     /// Called when the Text Color toolbar item is pressed.
     @objc optional func richEditorToolbarChangeTextColor(_ toolbar: RichEditorToolbar)
@@ -22,28 +22,44 @@ import UIKit
 
     /// Called when the Insert Link toolbar item is pressed.
     @objc optional func richEditorToolbarInsertLink(_ toolbar: RichEditorToolbar)
+    
+    /// Font degisikligi yapilir
+    @objc optional func richEditorFontChange(_ toolbar: RichEditorToolbar)
 }
 
 /// RichBarButtonItem is a subclass of UIBarButtonItem that takes a callback as opposed to the target-action pattern
 @objcMembers open class RichBarButtonItem: UIBarButtonItem {
     open var actionHandler: (() -> Void)?
-    
-    public convenience init(image: UIImage? = nil, handler: (() -> Void)? = nil) {
+    open var buttonTag: String?
+    let defaultTintColor: UIColor = .black
+    let selectedTintColor: UIColor = .green // you can change if you want
+
+    public convenience init(image: UIImage? = nil,
+                            buttonTag: String? = nil,
+                            handler: (() -> Void)? = nil) {
         self.init(image: image, style: .plain, target: nil, action: nil)
         target = self
         action = #selector(RichBarButtonItem.buttonWasTapped)
-        actionHandler = handler
+        self.buttonTag = buttonTag
+        self.actionHandler = handler
     }
-    
-    public convenience init(title: String = "", handler: (() -> Void)? = nil) {
+
+    public convenience init(title: String = "",
+                            buttonTag: String? = nil,
+                            handler: (() -> Void)? = nil) {
         self.init(title: title, style: .plain, target: nil, action: nil)
         target = self
         action = #selector(RichBarButtonItem.buttonWasTapped)
-        actionHandler = handler
+        self.buttonTag = buttonTag
+        self.actionHandler = handler
+    }
+
+    @objc func buttonWasTapped() {
+       actionHandler?()
     }
     
-    @objc func buttonWasTapped() {
-        actionHandler?()
+    open func updateTintColor(tintColor: UIColor) {
+        self.tintColor = tintColor
     }
 }
 
@@ -69,10 +85,22 @@ import UIKit
         set { backgroundToolbar.barTintColor = newValue }
     }
 
+    open override var tintColor: UIColor? {
+        get { return toolbar.tintColor }
+        set { toolbar.tintColor = newValue }
+    }
+
+    open var toolbarItemSelectedTintColor: UIColor? {
+        get { return itemSelectedTintColor }
+        set { itemSelectedTintColor = newValue }
+    }
+
     private var toolbarScroll: UIScrollView
     private var toolbar: UIToolbar
     private var backgroundToolbar: UIToolbar
-    
+    private var itemSelectedTintColor: UIColor? = .black
+
+
     public override init(frame: CGRect) {
         toolbarScroll = UIScrollView()
         toolbar = UIToolbar()
@@ -80,7 +108,7 @@ import UIKit
         super.init(frame: frame)
         setup()
     }
-    
+
     public required init?(coder aDecoder: NSCoder) {
         toolbarScroll = UIScrollView()
         toolbar = UIToolbar()
@@ -88,7 +116,7 @@ import UIKit
         super.init(coder: aDecoder)
         setup()
     }
-    
+
     private func setup() {
         autoresizingMask = .flexibleWidth
         backgroundColor = .clear
@@ -100,7 +128,7 @@ import UIKit
         toolbar.backgroundColor = .clear
         toolbar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
         toolbar.setShadowImage(UIImage(), forToolbarPosition: .any)
-
+        
         toolbarScroll.frame = bounds
         toolbarScroll.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         toolbarScroll.showsHorizontalScrollIndicator = false
@@ -108,42 +136,37 @@ import UIKit
         toolbarScroll.backgroundColor = .clear
 
         toolbarScroll.addSubview(toolbar)
-
+        
         addSubview(backgroundToolbar)
         addSubview(toolbarScroll)
         updateToolbar()
     }
-    
+
     private func updateToolbar() {
         var buttons = [UIBarButtonItem]()
         for option in options {
-            let handler = { [weak self] in
-                if let strongSelf = self {
-                    option.action(strongSelf)
-                }
-            }
-
             if let image = option.image {
-                let button = RichBarButtonItem(image: image, handler: handler)
-                buttons.append(button)
-            } else {
-                let title = option.title
-                let button = RichBarButtonItem(title: title, handler: handler)
+                let button = RichBarButtonItem(image: image, buttonTag: option.tag, handler: { [weak self] in
+                    guard let self else { return }
+                    option.action(self)
+                })
+                
                 buttons.append(button)
             }
         }
+        
         toolbar.items = buttons
 
         let defaultIconWidth: CGFloat = 28
         let barButtonItemMargin: CGFloat = 12
-        let width: CGFloat = buttons.reduce(0) {sofar, new in
+        let width: CGFloat = buttons.reduce(0) { sofar, new in
             if let view = new.value(forKey: "view") as? UIView {
                 return sofar + view.frame.size.width + barButtonItemMargin
             } else {
                 return sofar + (defaultIconWidth + barButtonItemMargin)
             }
         }
-        
+
         if width < frame.size.width {
             toolbar.frame.size.width = frame.size.width + barButtonItemMargin
         } else {
@@ -151,6 +174,19 @@ import UIKit
         }
         toolbar.frame.size.height = 44
         toolbarScroll.contentSize.width = width
+    }
+
+    
+    func updateToolBarItemTintColor(tags: [String]) {
+        toolbar.items?.compactMap { $0 as? RichBarButtonItem }.forEach { [weak self] button in
+            guard let self else { return }
+            
+            if let tag = button.buttonTag, tag.isNotEmpty {
+                let buttonTintColor = tags.contains(tag) ? self.toolbarItemSelectedTintColor : self.tintColor
+                
+                button.updateTintColor(tintColor: buttonTintColor ?? .black)
+            }
+        }
     }
     
 }

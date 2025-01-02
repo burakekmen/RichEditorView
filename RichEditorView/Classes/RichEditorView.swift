@@ -12,7 +12,7 @@ import WebKit
 private let DefaultInnerLineHeight: Int = 21
     
 /// RichEditorDelegate defines callbacks for the delegate of the RichEditorView
-@objc public protocol RichEditorDelegate: class {
+@objc public protocol RichEditorDelegate: AnyObject {
     /// Called when the inner height of the text being displayed changes
     /// Can be used to update the UI
     @objc optional func richEditor(_ editor: RichEditorView, heightDidChange height: Int)
@@ -40,6 +40,9 @@ private let DefaultInnerLineHeight: Int = 21
     /// Called when custom actions are called by callbacks in the JS
     /// By default, this method is not used unless called by some custom JS that you add
     @objc optional func richEditor(_ editor: RichEditorView, handle action: String)
+    
+    /// İmlecin bulundugu metinde kullanılan html etiketlerini doner. Bu bilgiye gore de toolbar icindeki seceneklerin rengi degistirilir
+    @objc optional func richEditorSelectedTag(_ editor: RichEditorView, selectedTags tags: [String])
 }
 
 /// RichEditorView is a UIView that displays richly styled text, and allows it to be edited in a WYSIWYG fashion.
@@ -359,6 +362,11 @@ private let DefaultInnerLineHeight: Int = 21
         runJS("RE.blurFocus()")
     }
     
+    public func setFont(_ font: String) {
+        let js = "document.execCommand('fontName', false, '\(font)');"
+        runJS(js)
+    }
+    
     /// Runs some JavaScript on the WKWebView and returns the result
     /// If there is no result, returns an empty string
     /// - parameter js: The JavaScript string to be run
@@ -409,7 +417,7 @@ private let DefaultInnerLineHeight: Int = 21
     // MARK: WKWebViewDelegate
     
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        // empy
+      // empty
     }
     
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
@@ -575,6 +583,22 @@ private let DefaultInnerLineHeight: Int = 21
                 let action = method.replacingCharacters(in: range, with: "")
                 
                 self.delegate?.richEditor?(self, handle: action)
+            }
+        }
+        else if method.hasPrefix("tagsInSelection/") {
+            let tagsPrefix = "tagsInSelection/"
+            let range = method.range(of: tagsPrefix)!
+            let tags = method.replacingCharacters(in: range, with: "").components(separatedBy: ",").filter { $0.isNotEmpty }
+            
+            delegate?.richEditorSelectedTag?(self, selectedTags: tags)
+        }
+        else if method.hasPrefix("appliedTag/") {
+            let tagsPrefix = "appliedTag/"
+            let range = method.range(of: tagsPrefix)!
+            let tag = method.replacingCharacters(in: range, with: "")
+            
+            if tag.isNotEmpty {
+                delegate?.richEditorSelectedTag?(self, selectedTags: [tag])
             }
         }
     }

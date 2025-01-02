@@ -22,7 +22,13 @@ RE.editor = document.getElementById('editor');
 // Not universally supported, but seems to work in iOS 7 and 8
 document.addEventListener("selectionchange", function() {
     RE.backuprange();
+    
+    if (RE.rangeOrCaretSelectionExists()) {
+        var tags = RE.getTagsInSelection();
+        RE.callback("tagsInSelection/" + tags);
+    }
 });
+
 
 //looks specifically for a Range selection and not a Caret selection
 RE.rangeSelectionExists = function() {
@@ -414,6 +420,87 @@ RE.getRelativeCaretYPosition = function() {
 
     return y;
 };
+
+RE.getAppliedTag = function() {
+    // This function should be written to return the tag that was applied.
+    // For example, it can return the last applied command or style change.
+    var sel = window.getSelection();
+    const generalTags = ["div", "body", "html"];
+    
+    if (sel.rangeCount > 0) {
+        var range = sel.getRangeAt(0);
+        var container = range.commonAncestorContainer;
+        
+        // If the container is a text node, get its parent element
+        if (container.nodeType === 3) {
+            container = container.parentNode;
+        }
+        
+        var appliedTag = container.nodeName.toLowerCase();
+        
+        if (!generalTags.includes(appliedTag)) {
+            // Check if the element has a background color or color style
+            if (appliedTag === 'span') {
+                var backgroundColor = container.style.backgroundColor;
+                var color = container.style.color;
+
+                if (backgroundColor) {
+                    appliedTag = "spanBgColor";
+                }
+
+                if (color) {
+                    appliedTag = "spanTColor";
+                }
+            }
+
+            return appliedTag;
+        }
+
+        return "";
+    }
+    return "";
+};
+
+RE.getTagsInSelection = function() {
+    var sel = window.getSelection();
+    var tags = [];
+    const generalTags = ["div", "body", "html"];
+
+    if (sel.rangeCount > 0) {
+        var range = sel.getRangeAt(0);
+        var container = range.commonAncestorContainer;
+
+        // If the container is a text node, get its parent element
+        if (container.nodeType === 3) {
+            container = container.parentNode;
+        }
+
+        while (container && container.nodeType === 1) {
+            var nodeName = container.nodeName.toLowerCase();
+            if (!generalTags.includes(nodeName)) {
+                // Check if the element has a background color or color style
+                if (nodeName === 'span') {
+                    var backgroundColor = container.style.backgroundColor;
+                    var color = container.style.color;
+
+                    if (backgroundColor) {
+                        nodeName = "spanBgColor";
+                    }
+
+                    if (color) {
+                        nodeName = "spanTColor";
+                    }
+                }
+
+                tags.push(nodeName);
+            }
+            container = container.parentNode;
+        }
+    }
+
+    return tags;
+};
+
 
 window.onload = function() {
     RE.callback("ready");

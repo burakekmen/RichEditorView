@@ -18,6 +18,8 @@ public protocol RichEditorOption {
     /// If `image` is nil, this will be used for display in the RichEditorToolbar.
     var title: String { get }
 
+    var tag: String { get }
+    
     /// The action to be evoked when the action is tapped
     /// - parameter editor: The RichEditorToolbar that the RichEditorOption was being displayed in when tapped.
     ///                     Contains a reference to the `editor` RichEditorView to perform actions on.
@@ -33,13 +35,16 @@ public struct RichEditorOptionItem: RichEditorOption {
 
     /// If an `itemImage` is not specified, this is used in display
     public var title: String
+    
+    public var tag: String
 
     /// The action to be performed when tapped
     public var handler: ((RichEditorToolbar) -> Void)
 
-    public init(image: UIImage?, title: String, action: @escaping ((RichEditorToolbar) -> Void)) {
+    public init(image: UIImage?, title: String, tag: String, action: @escaping ((RichEditorToolbar) -> Void)) {
         self.image = image
         self.title = title
+        self.tag = tag
         self.handler = action
     }
     
@@ -52,7 +57,6 @@ public struct RichEditorOptionItem: RichEditorOption {
 
 /// RichEditorOptions is an enum of standard editor actions
 public enum RichEditorDefaultOption: RichEditorOption {
-
     case clear
     case undo
     case redo
@@ -74,15 +78,17 @@ public enum RichEditorDefaultOption: RichEditorOption {
     case alignRight
     case image
     case link
+    case font
     
     public static let all: [RichEditorDefaultOption] = [
-        //.clear,
-        .undo, .redo, .bold, .italic,
-        .subscript, .superscript, .strike, .underline,
+        .undo, .redo,
+        .bold, .italic, .underline,
         .textColor, .textBackgroundColor,
-        .header(1), .header(2), .header(3), .header(4), .header(5), .header(6),
-        .indent, outdent, orderedList, unorderedList,
-        .alignLeft, .alignCenter, .alignRight, .image, .link
+        .font,
+        .header(1), .header(2), .header(3),
+        .orderedList, .unorderedList,
+        .alignLeft, .alignCenter, .alignRight,
+        .strike
     ]
 
     // MARK: RichEditorOption
@@ -111,6 +117,7 @@ public enum RichEditorDefaultOption: RichEditorOption {
         case .alignRight: name = "justify_right"
         case .image: name = "insert_image"
         case .link: name = "insert_link"
+        case .font: name = "fonts"
         }
         
         let bundle = Bundle(for: RichEditorToolbar.self)
@@ -140,6 +147,34 @@ public enum RichEditorDefaultOption: RichEditorOption {
         case .alignRight: return NSLocalizedString("Right", comment: "")
         case .image: return NSLocalizedString("Image", comment: "")
         case .link: return NSLocalizedString("Link", comment: "")
+        case .font: return NSLocalizedString("Font", comment: "")
+        }
+    }
+    
+    public var tag: String {
+        switch self {
+        case .clear: return ""
+        case .undo: return ""
+        case .redo: return ""
+        case .bold: return "b"
+        case .italic: return "i"
+        case .subscript: return "sub"
+        case .superscript: return "sup"
+        case .strike: return "strike"
+        case .underline: return "u"
+        case .textColor: return "spanTColor"
+        case .textBackgroundColor: return "spanBgColor"
+        case .header(let h): return "h\(h)"
+        case .indent: return "blockquote"
+        case .outdent: return ""
+        case .orderedList: return "ol"
+        case .unorderedList: return "ul"
+        case .alignLeft: return ""
+        case .alignCenter: return ""
+        case .alignRight: return ""
+        case .image: return ""
+        case .link: return ""
+        case .font: return ""
         }
     }
     
@@ -166,6 +201,7 @@ public enum RichEditorDefaultOption: RichEditorOption {
         case .alignRight: toolbar.editor?.alignRight()
         case .image: toolbar.delegate?.richEditorToolbarInsertImage?(toolbar)
         case .link: toolbar.delegate?.richEditorToolbarInsertLink?(toolbar)
+        case .font: toolbar.delegate?.richEditorFontChange?(toolbar)
         }
     }
 }
